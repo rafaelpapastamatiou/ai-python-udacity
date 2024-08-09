@@ -1,0 +1,120 @@
+Command Line Arguments:
+     dir = uploaded_images/ 
+    arch = alexnet 
+ dogfile = dognames.txt
+
+Pet Image Label Dictionary has 4 key-value pairs.
+Below are 4 of them:
+ 1 key:                     Cat_01.jpg  label:                        cat
+ 2 key:                     Dog_02.jpg  label:                        dog
+ 3 key:                   Chair_01.jpg  label:                      chair
+ 4 key:                     Dog_01.jpg  label:                        dog
+
+     MATCH:
+
+                    Cat_01.jpg: 
+Real:                        cat   Classifier:          tabby, tabby cat, cat
+
+ NOT A MATCH:
+
+                    Dog_02.jpg: 
+Real:                        dog   Classifier: german shepherd, german shepherd dog, german police dog, alsatian
+
+                  Chair_01.jpg: 
+Real:                      chair   Classifier:          rocking chair, rocker
+
+                    Dog_01.jpg: 
+Real:                        dog   Classifier: german shepherd, german shepherd dog, german police dog, alsatian
+
+# Total Images 4 # Matches: 1 # NOT Matches: 3
+Warning: corgi already exists in the dictionary.
+Warning: affenpinscher already exists in the dictionary.
+Warning: afghan hound already exists in the dictionary.
+Warning: airedale terrier already exists in the dictionary.
+Warning: alaskan malamute already exists in the dictionary.
+Warning: american staffordshire terrier already exists in the dictionary.
+Warning: basset hound already exists in the dictionary.
+Warning: bloodhound already exists in the dictionary.
+Warning: borzoi already exists in the dictionary.
+Warning: boston terrier already exists in the dictionary.
+Warning: bouvier des flandres already exists in the dictionary.
+Warning: cairn terrier already exists in the dictionary.
+Warning: cardigan welsh corgi already exists in the dictionary.
+Warning: chow chow already exists in the dictionary.
+Warning: clumber spaniel already exists in the dictionary.
+Warning: cocker spaniel already exists in the dictionary.
+Warning: corgi already exists in the dictionary.
+Warning: dalmatian already exists in the dictionary.
+Warning: dandie dinmont terrier already exists in the dictionary.
+Warning: deerhound already exists in the dictionary.
+Warning: doberman pinscher already exists in the dictionary.
+Warning: english cocker spaniel already exists in the dictionary.
+Warning: english springer spaniel already exists in the dictionary.
+Warning: german shepherd dog already exists in the dictionary.
+Warning: ibizan hound already exists in the dictionary.
+Warning: irish setter already exists in the dictionary.
+Warning: lhasa apso already exists in the dictionary.
+Warning: maltese already exists in the dictionary.
+Warning: newfoundland already exists in the dictionary.
+Warning: norwegian elkhound already exists in the dictionary.
+Warning: old english sheepdog already exists in the dictionary.
+Warning: otterhound already exists in the dictionary.
+Warning: pekingese already exists in the dictionary.
+Warning: pembroke welsh corgi already exists in the dictionary.
+Warning: poodle already exists in the dictionary.
+Warning: pug already exists in the dictionary.
+Warning: saint bernard already exists in the dictionary.
+Warning: saluki already exists in the dictionary.
+Warning: samoyed already exists in the dictionary.
+Warning: schnauzer already exists in the dictionary.
+Warning: scottish terrier already exists in the dictionary.
+Warning: sealyham terrier already exists in the dictionary.
+Warning: shetland sheepdog already exists in the dictionary.
+Warning: silky terrier already exists in the dictionary.
+Warning: staffordshire bull terrier already exists in the dictionary.
+Warning: tibetan terrier already exists in the dictionary.
+Warning: vizsla already exists in the dictionary.
+Warning: walker hound already exists in the dictionary.
+
+     MATCH:
+
+                    Cat_01.jpg: 
+Real:                        cat   Classifier:          tabby, tabby cat, cat  
+PetLabelDog: 0  ClassLabelDog: 0
+
+ NOT A MATCH:
+
+                    Dog_02.jpg: 
+Real:                        dog   Classifier: german shepherd, german shepherd dog, german police dog, alsatian  
+PetLabelDog: 1  ClassLabelDog: 1
+
+                  Chair_01.jpg: 
+Real:                      chair   Classifier:          rocking chair, rocker  
+PetLabelDog: 0  ClassLabelDog: 0
+
+                    Dog_01.jpg: 
+Real:                        dog   Classifier: german shepherd, german shepherd dog, german police dog, alsatian  
+PetLabelDog: 1  ClassLabelDog: 1
+
+# Total Images 4 # Matches: 1 # NOT Matches: 3
+
+ ** Statistics from calculates_results_stats() function:
+N Images:  4  N Dog Images:  2  N NotDog Images:  2 
+Pct Corr dog: 100.0 Pct Corr NOTdog: 100.0  Pct Corr Breed:   0.0
+
+ ** Check Statistics - calculated from this function as a check:
+N Images:  4  N Dog Images:  2  N NotDog Images:  2 
+Pct Corr dog: 100.0 Pct Corr NOTdog: 100.0  Pct Corr Breed:   0.0
+Printing results for model:  alexnet
+Number of Images:  4
+Number of Dog Images:  2
+Number of Not-a-Dog Images:  2
+% Match 25.0
+% Correct Dogs 100.0
+% Correct Breed 0.0
+% Correct "Not-a" Dog 100.0
+Incorrectly classified breeds:
+Pet Image: dog, Classifier Label: german shepherd, german shepherd dog, german police dog, alsatian
+Pet Image: dog, Classifier Label: german shepherd, german shepherd dog, german police dog, alsatian
+
+** Total Elapsed Runtime: 0:0:0
