@@ -3,6 +3,7 @@ import torch
 from torch import nn
 from torch import optim
 from torchvision import datasets, transforms, models
+import os
 
 def parse_input_args():
     parser = argparse.ArgumentParser(description="AIPND Training app")
@@ -156,6 +157,9 @@ def train_model(
     print("Traning finished!")
 
 def save_model(model, classifier, arch, checkpoint_dir):
+    if not os.path.exists(checkpoint_dir):
+        os.makedirs(checkpoint_dir)
+    
     checkpoint_filepath = checkpoint_dir + "/" + arch + "_checkpoint.pth"
     
     checkpoint = {
