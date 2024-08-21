@@ -59,22 +59,21 @@ def build_base_model(arch):
         
     return getattr(models, arch)(pretrained=True)
 
-def build_model(base_model, training_set_size, hidden_units = "", dropout = 0.2):
+def build_model(base_model, training_set_size, hidden_units = "", dropout = 0.2):    
     hidden_units = [int(hu) for hu in hidden_units.split(",")] if hidden_units else []
         
     base_model_classifier_key = next(reversed(base_model._modules))
-    
-    base_classifier_layer = base_model._modules[base_model_classifier_key]
-    base_classifier_layer = base_classifier_layer[0] if isinstance(base_classifier_layer, nn.Sequential) else base_classifier_layer
+    base_classifier_layers = base_model._modules[base_model_classifier_key]
+
+    print("Original classifier: ", base_classifier_layers, "\n")
+
+    base_classifier_layer = base_classifier_layers[0] if isinstance(base_classifier_layers, nn.Sequential) else base_classifier_layers
     classifier_layers = [base_classifier_layer]
-
-    print("Original classifier: ", base_classifier_layer, "\n")
-
     if len(hidden_units) == 0:
         classifier_layers.extend([
             nn.ReLU(),
             nn.Dropout(dropout),
-            nn.Linear(classifier_layers[0].out_features, training_set_size)
+            nn.Linear(classifier_layers[-1].out_features, training_set_size)
         ])
     else:
         for hu in hidden_units:
@@ -114,7 +113,10 @@ def train_model(
 ):
     device = torch.device("cuda" if gpu == True and torch.cuda.is_available() else "cpu")
     
-    print("Traning on", device, "\n")
+    print("Traning on", device)
+    print("Epochs: ", epochs)
+    print("Learning rate: ", learning_rate)
+    print("Using GPU: ", gpu)
     
     criterion = nn.NLLLoss()
     optimizer = optim.SGD(classifier.parameters(), lr=learning_rate)
@@ -184,6 +186,12 @@ def save_model(model, classifier, arch, checkpoint_dir):
                 
 def main():
     args = parse_input_args()
+
+    print("Running with args:\n")
+    for k, v in vars(args).items():
+        print(f"{k}: {v}")
+
+    print("")
     
     (train_dataloader, train_dataset), (valid_dataloader, _) = load_training_data(args.data_dir)
     
