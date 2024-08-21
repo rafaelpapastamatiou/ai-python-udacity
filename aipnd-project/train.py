@@ -12,7 +12,7 @@ def parse_input_args():
     parser.add_argument("--save_dir", type=str, default="checkpoints", help="Directory to save checkpoints")
     parser.add_argument("--arch", type=str, default="vgg19", help="Base architecture to use")
     parser.add_argument("--learning_rate", type=float, default=0.01, help="Network Learning Rate")
-    parser.add_argument("--hidden_units", type=str, default="4096,102", help="Network Hidden Units separated by comma")
+    parser.add_argument("--hidden_units", type=str, help="Network Hidden Units separated by comma")
     parser.add_argument("--dropout", type=float, default=0.2, help="Dropout to use on each hidden layer")
     parser.add_argument("--epochs", type=float, default=10, help="Epochs amount to train the network")
     parser.add_argument("--batch_size", type=int, default=64, help="Batch size to use when training model")
@@ -59,30 +59,34 @@ def build_base_model(arch):
         
     return getattr(models, arch)(pretrained=True)
 
-def build_model(base_model, hidden_units, dropout = 0.2):
-    hidden_units = [int(hu) for hu in hidden_units.split(",")]
-    
-    if len(hidden_units) % 2 != 0:
-        raise Exception("Hidden units list length must be an even number")
+def build_model(base_model, training_set_size, hidden_units = "", dropout = 0.2):
+    hidden_units = [int(hu) for hu in hidden_units.split(",")] if hidden_units else []
         
     base_model_classifier_key = next(reversed(base_model._modules))
     
-    base_classifier_layer = base_model._modules[base_model_classifier_key][0]
-    
-    additional_layers = []
-    
-    for i, hu in enumerate(hidden_units):
-        if i % 2 != 0:
-            additional_layers.append(nn.ReLU())
-            additional_layers.append(nn.Dropout(dropout))
-            additional_layers.append(
-                nn.Linear(hidden_units[i - 1], hu)
-            )
-    
+    base_classifier_layer = base_model._modules[base_model_classifier_key]
+    base_classifier_layer = base_classifier_layer[0] if isinstance(base_classifier_layer, nn.Sequential) else base_classifier_layer
+
+    classifier_layers = [base_classifier_layer]
+
+    if len(hidden_units) == 0:
+        classifier_layers.append(nn.Linear(classifier_layers[0].out_features, training_set_size))
+    else:
+        for hu in hidden_units:
+            classifier_layers += [
+                nn.ReLU(),
+                nn.Dropout(dropout),
+                nn.Linear(classifier_layers[-1].out_features, hu)   
+            ]
+        else:
+            classifier_layers += [
+                nn.ReLU(),
+                nn.Dropout(dropout),
+                nn.Linear(classifier_layers[-1].out_features, training_set_size)
+            ]
     
     classifier = nn.Sequential(
-        base_classifier_layer,
-        *additional_layers,
+        *classifier_layers,
         nn.LogSoftmax(dim=1)
     )
     
@@ -178,7 +182,12 @@ def main():
     
     base_model = build_base_model(args.arch)
     
-    model, classifier = build_model(base_model, args.hidden_units, args.dropout)
+    model, classifier = build_model(
+        base_model,
+        len(train_dataset.classes),
+        hidden_units=args.hidden_units,
+        dropout=args.dropout
+    )
     
     train_model(
         model,
