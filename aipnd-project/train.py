@@ -52,7 +52,7 @@ def load_training_data(folder, batch_size=64):
     return (train_dataloader, train_dataset), (valid_dataloader, valid_dataset)
 
 def build_base_model(arch):
-    print("Using arch: ", arch)
+    print("Using arch: ", arch, "\n")
     
     if hasattr(models, arch) == False:
         raise Exception("Architecture not supported")
@@ -67,6 +67,8 @@ def build_model(base_model, training_set_size, hidden_units = "", dropout = 0.2)
     base_classifier_layer = base_model._modules[base_model_classifier_key]
     base_classifier_layer = base_classifier_layer[0] if isinstance(base_classifier_layer, nn.Sequential) else base_classifier_layer
     classifier_layers = [base_classifier_layer]
+
+    print("Original classifier: ", base_classifier_layer, "\n")
 
     if len(hidden_units) == 0:
         classifier_layers.append(nn.Linear(classifier_layers[0].out_features, training_set_size))
@@ -88,6 +90,8 @@ def build_model(base_model, training_set_size, hidden_units = "", dropout = 0.2)
         *classifier_layers,
         nn.LogSoftmax(dim=1)
     )
+
+    print("Custom classifier: ", classifier, "\n")
     
     base_model._modules[base_model_classifier_key] = classifier
     
@@ -106,7 +110,7 @@ def train_model(
 ):
     device = torch.device("cuda" if gpu == True and torch.cuda.is_available() else "cpu")
     
-    print("Traning on", device)
+    print("Traning on", device, "\n")
     
     criterion = nn.NLLLoss()
     optimizer = optim.SGD(classifier.parameters(), lr=learning_rate)
@@ -179,8 +183,10 @@ def main():
     
     (train_dataloader, train_dataset), (valid_dataloader, _) = load_training_data(args.data_dir)
     
+    print("Retrieving base model\n")
     base_model = build_base_model(args.arch)
     
+    print("\nBuilding model and classifier\n")
     model, classifier = build_model(
         base_model,
         len(train_dataset.classes),
