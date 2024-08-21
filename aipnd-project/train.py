@@ -14,7 +14,7 @@ def parse_input_args():
     parser.add_argument("--learning_rate", type=float, default=0.01, help="Network Learning Rate")
     parser.add_argument("--hidden_units", type=str, help="Network Hidden Units separated by comma")
     parser.add_argument("--dropout", type=float, default=0.2, help="Dropout to use on each hidden layer")
-    parser.add_argument("--epochs", type=float, default=10, help="Epochs amount to train the network")
+    parser.add_argument("--epochs", type=int, default=10, help="Epochs amount to train the network")
     parser.add_argument("--batch_size", type=int, default=64, help="Batch size to use when training model")
     parser.add_argument("--gpu", action='store_true', default=False, help="Use GPU (Cuda) if available")
     parser.add_argument("--print_every", type=int, default=5, help="Validate and print accuracy every X steps when training")
@@ -66,7 +66,6 @@ def build_model(base_model, training_set_size, hidden_units = "", dropout = 0.2)
     
     base_classifier_layer = base_model._modules[base_model_classifier_key]
     base_classifier_layer = base_classifier_layer[0] if isinstance(base_classifier_layer, nn.Sequential) else base_classifier_layer
-
     classifier_layers = [base_classifier_layer]
 
     if len(hidden_units) == 0:
