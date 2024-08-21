@@ -71,20 +71,24 @@ def build_model(base_model, training_set_size, hidden_units = "", dropout = 0.2)
     print("Original classifier: ", base_classifier_layer, "\n")
 
     if len(hidden_units) == 0:
-        classifier_layers.append(nn.Linear(classifier_layers[0].out_features, training_set_size))
+        classifier_layers.extend([
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(classifier_layers[0].out_features, training_set_size)
+        ])
     else:
         for hu in hidden_units:
-            classifier_layers += [
+            classifier_layers.extend([
                 nn.ReLU(),
                 nn.Dropout(dropout),
                 nn.Linear(classifier_layers[-1].out_features, hu)   
-            ]
+            ])
         else:
-            classifier_layers += [
+            classifier_layers.extend([
                 nn.ReLU(),
                 nn.Dropout(dropout),
                 nn.Linear(classifier_layers[-1].out_features, training_set_size)
-            ]
+            ])
     
     classifier = nn.Sequential(
         *classifier_layers,
